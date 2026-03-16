@@ -1,4 +1,5 @@
 from . import db
+from werkzeug.security import generate_password_hash
 
 
 class UserProfile(db.Model):
@@ -12,6 +13,16 @@ class UserProfile(db.Model):
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     username = db.Column(db.String(80), unique=True)
+
+    # Adding password
+    password = db.Column(db.String(128), unique=True)
+
+    def __init__(self, id, first_name, last_name, username, password):
+        self.id = id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
+        self.password = generate_password_hash(password, method='pbkdf2:sha256')
 
     def is_authenticated(self):
         return True
